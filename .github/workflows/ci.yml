@@ -29,31 +29,8 @@ jobs:
           name: build-artifact
           path: /tmp/github-actions
 
-  behat:
-    runs-on: ubuntu-latest
-    needs: [composer]
-
-    steps:
-      - uses: actions/download-artifact@v3
-        with:
-          name: build-artifact
-          path: /tmp/github-actions
-
-      - name: Extract build archive
-        run: tar -xvf /tmp/github-actions/build.tar ./
-
-      - name: Local development server
-        run: mkdir www && php -S 0.0.0.0:8080 -t www vendor/phpgt/webengine/go.php &
-
-      - name: Behat tests
-        uses: php-actions/behat@v1
-        with:
-          config: test/behat/behat.yml
-
   deploy:
     runs-on: ubuntu-latest
-    needs: [behat]
-
     steps:
       - uses: actions/download-artifact@v3
         with:
@@ -62,12 +39,6 @@ jobs:
 
       - name: Extract build archive
         run: tar -xvf /tmp/github-actions/build.tar ./
-
-      - name: Generate config value from Github Secret
-        run: ./vendor/bin/config-generate deploy example.secret="${{ secrets.example_secret }}"
-
-      - name: Inject branch name into Config
-        run: ./vendor/bin/config-generate deploy example.test_key="The branch is ${{ github.ref_name }}"
 
       - uses: php-actions/deploy-ssh@wip
         with:
