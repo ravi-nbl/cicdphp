@@ -14,7 +14,7 @@ jobs:
           path: /tmp/github-actions
     
       # Then deploy to your server of choice
-      - uses: php-actions/deploy
+      - uses: actions/download-artifact@v3
         with:
           hostname: 147.182.210.25
           user: nblweb2-nbllab-un
