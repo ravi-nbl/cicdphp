@@ -6,14 +6,12 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    
     steps:
       - uses: actions/download-artifact@v3
         with:
           name: build-artifact
           path: /tmp/github-actions
-
-      - name: Extract build archive
-        run: tar -xvf /tmp/github-actions/build.tar ./
 
       - uses: php-actions/deploy-ssh@wip
         with:
@@ -21,5 +19,4 @@ jobs:
           hostname: 147.182.210.25
           user: nblweb2-nbllab-un
           path: ./apps/nblweb2-nbllab/public
-          path_owner: www-data.
           ssh_key: ${{ secrets.SSH_PRIVATE_KEY }}
